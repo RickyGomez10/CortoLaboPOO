@@ -20,8 +20,8 @@ import modelo.producto;
  */
 public class Consulta extends JFrame {
 
-    public JLabel lblnombre, lblcodigo, lblprecio, lblcantidad, lbldisponibilidad, lbltipo, lblexistencia, lblid;
-    public JTextField nombre, codigo, precio, cantidad, id;
+    public JLabel lblnombre, lblcodigo, lblprecio, lblcantidad, lbldisponibilidad, lbltipo, lblexistencia;
+    public JTextField nombre, codigo, precio, cantidad;
     public JComboBox tipo;
 
     ButtonGroup existencia = new ButtonGroup();
@@ -41,7 +41,7 @@ public class Consulta extends JFrame {
         setLayout(null);
         agregarLabels();
         formulario();
-        //llenarTabla();
+        llenarTabla();
 
         Container container = getContentPane();
         container.add(lblnombre);
@@ -50,13 +50,13 @@ public class Consulta extends JFrame {
         container.add(lblcantidad);
         container.add(lbldisponibilidad);
         container.add(lbltipo);
-        container.add(lblid);
+        
 
         container.add(codigo);
         container.add(nombre);
         container.add(precio);
         container.add(cantidad);
-        container.add(id);
+
         container.add(tipo);
 
         container.add(buscar);
@@ -71,7 +71,7 @@ public class Consulta extends JFrame {
     }
 
     public final void agregarLabels() {
-        lblid = new JLabel("ID");
+        
         lblnombre = new JLabel("Nombre");
         lblcodigo = new JLabel("codigo");
         lblprecio = new JLabel("Precio");
@@ -80,7 +80,7 @@ public class Consulta extends JFrame {
         lbldisponibilidad = new JLabel("Disponibilidad");
         lblexistencia = new JLabel("Stock en tienda");
 
-        lblid.setBounds(300, 10, ANCHOC, ALTOC);
+        
         lblnombre.setBounds(10, 10, ANCHOC, ALTOC);
         lblcodigo.setBounds(10, 50, ANCHOC, ALTOC);
         lblprecio.setBounds(10, 90, ANCHOC, ALTOC);
@@ -91,7 +91,7 @@ public class Consulta extends JFrame {
     }
 
     public final void formulario() {
-        id = new JTextField();
+        
         nombre = new JTextField();
         codigo = new JTextField();
         precio = new JTextField();
@@ -116,7 +116,7 @@ public class Consulta extends JFrame {
         existencia = new ButtonGroup();
         existencia.add(si);
         existencia.add(no);
-        id.setBounds(250, 10, ANCHOC, ALTOC);
+        
         nombre.setBounds(140, 10, ANCHOC, ALTOC);
         codigo.setBounds(140, 50, ANCHOC, ALTOC);
         precio.setBounds(140, 90, ANCHOC, ALTOC);
@@ -125,7 +125,7 @@ public class Consulta extends JFrame {
         no.setBounds(210, 140, 50, ALTOC);
         cantidad.setBounds(140, 180, ANCHOC, ALTOC);
 
-        buscar.setBounds(300, 10, ANCHOC, ALTOC);
+        buscar.setBounds(300, 50, ANCHOC, ALTOC);
         insertar.setBounds(10, 210, ANCHOC, ALTOC);
         actualizar.setBounds(150, 210, ANCHOC, ALTOC);
         eliminar.setBounds(300, 210, ANCHOC, ALTOC);
@@ -184,7 +184,7 @@ public class Consulta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ProductoDao fd = new ProductoDao();
-                producto f = new producto(Integer.parseInt(id.getText()), nombre.getText(), Integer.parseInt(codigo.getText()), tipo.getSelectedItem().toString(), Integer.parseInt(cantidad.getText()), Integer.parseInt(precio.getText()), 1);
+                producto f = new producto( nombre.getText(), codigo.getText(), tipo.getSelectedItem().toString(), Integer.parseInt(cantidad.getText()), Double.parseDouble(precio.getText()), 1);
                 if (no.isSelected()) {
                     f.setDisponibilidad(0);
                 }
@@ -202,7 +202,7 @@ public class Consulta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ProductoDao fd = new ProductoDao();
-                producto f = new producto(Integer.parseInt(id.getText()), nombre.getText(), Integer.parseInt(codigo.getText()), tipo.getSelectedItem().toString(), Integer.parseInt(cantidad.getText()), Integer.parseInt(precio.getText()), 1);
+                producto f = new producto( nombre.getText(), codigo.getText(), tipo.getSelectedItem().toString(), Integer.parseInt(cantidad.getText()), Double.parseDouble(precio.getText()), 1);
                 if (no.isSelected()) {
                     f.setDisponibilidad(0);
                 }
@@ -220,7 +220,7 @@ public class Consulta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ProductoDao fd = new ProductoDao();
-                if (fd.delete(id.getText())) {
+                if (fd.delete(codigo.getText())) {
                     JOptionPane.showMessageDialog(null, "Producto Eliminado con exito");
                     limpiarCampos();
                     llenarTabla();
@@ -234,15 +234,15 @@ public class Consulta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ProductoDao fd = new ProductoDao();
-                producto f = fd.read(id.getText());
+                producto f = fd.read(codigo.getText());
                 if (f == null) {
                     JOptionPane.showMessageDialog(null, "El filtro buscado no se ha encontrado");
-
                 } else {
-                    id.setText(Integer.toString(f.getId()));
+                   
                     nombre.setText(f.getNombre());
-                    codigo.setText(Integer.toString(f.getCodigo()));
+                    codigo.setText(f.getCodigo());
                     tipo.setSelectedItem(f.getTipo());
+                    precio.setText(Double.toString(f.getPrecio()));
                     cantidad.setText(Integer.toString(f.getCantidad()));
 
                     if (f.getDisponibilidad() == 1) {
@@ -266,7 +266,7 @@ public class Consulta extends JFrame {
     }
 
     public void limpiarCampos() {
-        id.setText("");
+        
         nombre.setText("");
         codigo.setText("");
         cantidad.setText("");
